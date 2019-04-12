@@ -1,18 +1,13 @@
 <template>
   <div id="app">
-    <VHeader></VHeader>
-    开始游戏
+    <router-view></router-view>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import VHeader from './components/VHeader/VHeader'
 
 export default {
-  name: 'App',
-  components: {
-    VHeader
-  }
+  name: 'App'
 }
 </script>
 

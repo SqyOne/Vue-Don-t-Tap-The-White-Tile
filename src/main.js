@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 
 import VueRouter from 'vue-router'
+import home from './components/home/home'
 import game from './components/game/game'
 
 Vue.use(VueRouter)
@@ -11,7 +12,7 @@ Vue.use(VueRouter)
 Vue.config.productionTip = false
 
 const routes = [
-  {path: '/', component: App},
+  {path: '/', component: home},
   {path: '/game', component: game}
 ]
 const router = new VueRouter({
