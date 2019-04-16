@@ -7,8 +7,8 @@
     <table class="tile">
       <tr class="row" v-for="(row, index) in rows" :key="index">
         <td class="column" v-for="column in columns" :key="column.id">
-          <div class="box black" v-show="row === column" @click="right(index, column)"></div>
-          <div class="box white" v-show="row !== column" @click="fail"></div>
+          <div class="box black" v-show="row === column" @touchend="right(index, column)"></div>
+          <div class="box white" v-show="row !== column" @touchend="fail"></div>
         </td>
       </tr>
     </table>
@@ -18,12 +18,12 @@
           <h1 class="end">游戏结束</h1>
         </div>
         <div class="score">
-          <span class="preScore">本次得分：{{score}}</span>
+          <span class="preScore">本次得分：{{preScore}}</span>
           <span class="maxScore">历史最高分：{{maxScore}}</span>
         </div>
         <div class="choose">
           <span class="again" @click="again">再来一局</span>
-          <div class="exit"><router-link to="/">退出</router-link></div>
+          <div class="exit" @click="exit">退出</div>
         </div>
       </div>
     </transition>
@@ -31,19 +31,28 @@
 </template>
 
 <script type="text/ecmascript-6">
+import {urlParse} from '../../common/js/util'
+
+const time = 60
 export default {
   name: 'game',
   data () {
     return {
-      remainingTime: 60,
+      remainingTime: time,
       score: 0,
+      preScore: 0,
       maxScore: 0,
       gaming: false,
       countdown: null,
+      black: 0,
       rows: [],
       rowLength: 4,
       columns: [1, 2, 3],
-      gameOverShow: false
+      gameOverShow: false,
+      id: (() => {
+        let queryParam = urlParse()
+        return queryParam.id
+      })()
     }
   },
   created () {
@@ -67,31 +76,34 @@ export default {
     gameEnd () {
       window.clearInterval(this.countdown)
       this.gaming = false
+      this.gameOverShow = true
     },
     right (rowIndex, column) {
-      console.log(rowIndex)
-      if (!this.gaming) {
-        this.startGame()
-      }
       if ((rowIndex + 1) !== this.rows.length) {
         return
       }
+      if (!this.gaming) {
+        this.startGame()
+      }
       this.score += 1
-      let black = Math.floor(Math.random() * this.columns.length + 1)
+      this.black = Math.floor(Math.random() * this.columns.length + 1)
+      this.rows.unshift(this.black)
       this.rows.pop()
-      this.rows.unshift(black)
     },
     fail () {
-      this.gameOverShow = true
-      window.clearInterval(this.countdown)
-      this.gaming = false
-      this.remainingTime = 60
-      if (this.score > this.maxScore) {
-        this.maxScore = this.score
+      this.gameEnd()
+      this.preScore = this.score
+      if (this.preScore > this.maxScore) {
+        this.maxScore = this.preScore
       }
+      this.score = 0
     },
     again () {
+      this.remainingTime = time
       this.gameOverShow = false
+    },
+    exit () {
+      this.$router.go(-1)
     }
   }
 }

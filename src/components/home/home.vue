@@ -7,7 +7,8 @@
     </div>
     <div class="start">
       <button class="startGame" @click="gameStart">
-        <router-link to="/game">开始游戏</router-link></button>
+        <router-link to="/game" class="game">开始游戏</router-link>
+      </button>
     </div>
   </div>
 </template>
@@ -51,13 +52,14 @@ export default {
       margin-top 20px
   .start
     width 100%
-    text-decoration none
     .startGame
       display block
-      width 80%
+      width 160px
       height 30px
       margin 80px auto
-      border-radius 40%
+      border none
       background #ef9ea0
-      text-decoration none
+      .game
+        text-decoration none
+        color #000
 </style>
